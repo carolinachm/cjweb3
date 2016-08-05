@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<h:form id="frmCadastro">
+		<p:messages id="messages" autoUpdate="true" closable="true" />
+		<p:panel header="Cadastro de Usuário">
+			<p:panelGrid columns="2">
+				
+				<h:outputLabel value="Senha" for="senha" />
+				<p:password id="senha" size="30"
+					value="#{usuarioBean.usuario.senha}"  />
+			</p:panelGrid>
+			<p:panelGrid columns="2">
+				<p:commandButton value="Salvar" action="#{usuarioBean.salvar}"
+					update=":frmCadastro" />
+			</p:panelGrid>
+		</p:panel>
+
+		<p:panel header="Lista de Usuários">
+			<p:dataTable id="tabela" var="usuario"
+				value="#{usuarioBean.usuarioList}" rows="10"
+				emptyMessage="Nenhum registro encontrado." paginator="true">
+
+				<f:facet name="header">Usuário</f:facet>
+				<p:column headerText="Código">
+					<h:outputText value="#{usuario.id}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{usuario.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="Email">
+					<h:outputText value="#{usuario.pessoa.email}" />
+				</p:column>
+
+				<p:column headerText="Ação">
+					<p:commandButton icon="ui-icon-pencil" alt="Editar" title="Editar"
+						immediate="true" process="@this" update=":frmCadastro">
+						<f:setPropertyActionListener value="#{usuario}"
+							target="#{usuarioBean.usuario}" />
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-trash" alt="Excluir"
+						oncomplete="PF('confirmacao').show();" immediate="true" title="Excluir"
+						process="@this" update=":frmCadastro">
+						<f:setPropertyActionListener value="#{usuario}"
+							target="#{usuarioBean.usuario}" />
+					</p:commandButton>
+
+
+				</p:column>
+
+			</p:dataTable>
+
+			<p:confirmDialog widgetVar="confirmacao"
+				message="Tem certeza que deseja excluir?" header="Aviso"
+				severity="alert" closable="true">
+
+				<p:commandButton title="Sim" alt="Sim" value="Sim"
+					actionListener="#{usuarioBean.excluir}"
+					onclick="confirmacao.hide();" update="@form" process="@this" />
+
+				<p:commandButton title="Não" alt="Não" value="Não"
+					onclick="confirmacao.hide();" />
+			</p:confirmDialog>
+		</p:panel>
+	</h:form>
+</body>
+</html>
